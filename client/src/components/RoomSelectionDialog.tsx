@@ -179,7 +179,7 @@ export default function RoomSelectionDialog() {
             </CustomRoomWrapper>
           ) : (
             <>
-              <Title>欢迎来到 SkyOffice</Title>
+              <Title>欢迎来到 学屿Office</Title>
               <Content>
                 <img src={logo} alt="logo" />
                 <Button variant="contained" color="secondary" onClick={handleConnect}>
