@@ -25,7 +25,7 @@ export default class OtherPlayer extends Player {
     super(scene, x, y, texture, id, frame)
     this.targetPosition = [x, y]
 
-    this.playerName.setText(name)
+    this.setPlayerName(name)
     this.playContainerBody = this.playerContainer.body as Phaser.Physics.Arcade.Body
   }
 
@@ -50,7 +50,16 @@ export default class OtherPlayer extends Player {
     switch (field) {
       case 'name':
         if (typeof value === 'string') {
-          this.playerName.setText(value)
+          this.setPlayerName(value)
+        }
+        break
+
+      case 'status':
+        if (typeof value === 'string' && (value === 'online' || value === 'busy')) {
+          this.updateStatus(value)
+          this.playerStatusCircle
+            .setPosition(-this.playerName.width / 2 - 8, 0)
+            .setFillStyle(value === 'online' ? 0x44b700 : 0xff0000)
         }
         break
 
@@ -102,8 +111,6 @@ export default class OtherPlayer extends Player {
       this.lastUpdateTimestamp = t
       this.x = this.targetPosition[0]
       this.y = this.targetPosition[1]
-      this.playerContainer.x = this.targetPosition[0]
-      this.playerContainer.y = this.targetPosition[1] - 30
       return
     }
 
@@ -128,12 +135,10 @@ export default class OtherPlayer extends Player {
     // if the player is close enough to the target position, directly snap the player to that position
     if (Math.abs(dx) < delta) {
       this.x = this.targetPosition[0]
-      this.playerContainer.x = this.targetPosition[0]
       dx = 0
     }
     if (Math.abs(dy) < delta) {
       this.y = this.targetPosition[1]
-      this.playerContainer.y = this.targetPosition[1] - 30
       dy = 0
     }
 

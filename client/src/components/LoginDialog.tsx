@@ -17,7 +17,7 @@ import Ash from '../images/login/Ash_login.png'
 import Lucy from '../images/login/Lucy_login.png'
 import Nancy from '../images/login/Nancy_login.png'
 import { useAppSelector, useAppDispatch } from '../hooks'
-import { setLoggedIn } from '../stores/UserStore'
+import { setLoggedIn, setUserName, setUserAvatar } from '../stores/UserStore'
 import { getAvatarString, getColorByString } from '../util'
 
 import phaserGame from '../PhaserGame'
@@ -162,6 +162,8 @@ export default function LoginDialog() {
       game.myPlayer.setPlayerTexture(avatars[avatarIndex].name)
       game.network.readyToConnect()
       dispatch(setLoggedIn(true))
+      dispatch(setUserName(name))
+      dispatch(setUserAvatar(avatars[avatarIndex].name))
     }
   }
 

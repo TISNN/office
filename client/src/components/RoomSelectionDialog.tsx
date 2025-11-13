@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from '../images/logo.png'
+import logo from '../images/xueyu.png'
 import styled from 'styled-components'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -68,9 +68,12 @@ const TitleWrapper = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
   color: #eee;
   text-align: center;
+  margin: 0;
+  font-weight: 700;
 `
 
 const Content = styled.div`
@@ -179,7 +182,7 @@ export default function RoomSelectionDialog() {
             </CustomRoomWrapper>
           ) : (
             <>
-              <Title>欢迎来到 学屿Office</Title>
+              <Title>欢迎来到 学屿SkyOffice</Title>
               <Content>
                 <img src={logo} alt="logo" />
                 <Button variant="contained" color="secondary" onClick={handleConnect}>

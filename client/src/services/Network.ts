@@ -241,6 +241,11 @@ export default class Network {
     this.room?.send(Message.UPDATE_PLAYER_NAME, { name: currentName })
   }
 
+  // method to update player status
+  updatePlayerStatus(status: 'online' | 'busy') {
+    this.room?.send(Message.UPDATE_PLAYER, { field: 'status', value: status })
+  }
+
   // method to send ready-to-connect signal to Colyseus server
   readyToConnect() {
     this.room?.send(Message.READY_TO_CONNECT)

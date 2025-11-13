@@ -10,16 +10,33 @@ export function getInitialBackgroundMode() {
   return currentHour > 6 && currentHour <= 18 ? BackgroundMode.DAY : BackgroundMode.NIGHT
 }
 
+interface UserState {
+  backgroundMode: BackgroundMode
+  sessionId: string
+  videoConnected: boolean
+  loggedIn: boolean
+  playerNameMap: Map<string, string>
+  showJoystick: boolean
+  userName: string
+  avatarId: string
+  userStatus: 'online' | 'busy'
+}
+
+const initialState: UserState = {
+  backgroundMode: BackgroundMode.DAY,
+  sessionId: '',
+  videoConnected: false,
+  loggedIn: false,
+  playerNameMap: new Map(),
+  showJoystick: window.innerWidth < 650,
+  userName: '',
+  avatarId: '',
+  userStatus: 'online'
+}
+
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    backgroundMode: getInitialBackgroundMode(),
-    sessionId: '',
-    videoConnected: false,
-    loggedIn: false,
-    playerNameMap: new Map<string, string>(),
-    showJoystick: window.innerWidth < 650,
-  },
+  initialState,
   reducers: {
     toggleBackgroundMode: (state) => {
       const newMode =
@@ -47,6 +64,15 @@ export const userSlice = createSlice({
     setShowJoystick: (state, action: PayloadAction<boolean>) => {
       state.showJoystick = action.payload
     },
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.userName = action.payload
+    },
+    setUserAvatar: (state, action: PayloadAction<string>) => {
+      state.avatarId = action.payload
+    },
+    setUserStatus: (state, action: PayloadAction<'online' | 'busy'>) => {
+      state.userStatus = action.payload
+    }
   },
 })
 
@@ -58,6 +84,9 @@ export const {
   setPlayerNameMap,
   removePlayerNameMap,
   setShowJoystick,
+  setUserName,
+  setUserAvatar,
+  setUserStatus
 } = userSlice.actions
 
 export default userSlice.reducer

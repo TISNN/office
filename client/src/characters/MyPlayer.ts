@@ -33,7 +33,7 @@ export default class MyPlayer extends Player {
   }
 
   setPlayerName(name: string) {
-    this.playerName.setText(name)
+    super.setPlayerName(name)
     phaserEvents.emit(Event.MY_PLAYER_NAME_CHANGE, name)
     store.dispatch(pushPlayerJoinedMessage(name))
   }
@@ -71,7 +71,7 @@ export default class MyPlayer extends Player {
           break
         case ItemType.VENDINGMACHINE:
           // hacky and hard-coded, but leaving it as is for now
-          const url = 'https://www.buymeacoffee.com/skyoffice'
+          const url = 'http://studylandsedu.com/'
           openURL(url)
           break
       }
@@ -98,12 +98,6 @@ export default class MyPlayer extends Player {
                   chairItem.x + sittingShiftData[chairItem.itemDirection][0],
                   chairItem.y + sittingShiftData[chairItem.itemDirection][1]
                 ).setDepth(chairItem.depth + sittingShiftData[chairItem.itemDirection][2])
-                // also update playerNameContainer velocity and position
-                this.playContainerBody.setVelocity(0, 0)
-                this.playerContainer.setPosition(
-                  chairItem.x + sittingShiftData[chairItem.itemDirection][0],
-                  chairItem.y + sittingShiftData[chairItem.itemDirection][1] - 30
-                )
               }
 
               this.play(`${this.playerTexture}_sit_${chairItem.itemDirection}`, true)
@@ -196,6 +190,12 @@ export default class MyPlayer extends Player {
         }
         break
     }
+  }
+
+  updateStatus(status: 'online' | 'busy') {
+    // 先调用父类的更新方法
+    super.updateStatus(status)
+    // 不要在这里触发事件,避免无限循环
   }
 }
 

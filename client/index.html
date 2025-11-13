@@ -6,12 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="An immersive virtual office" />
-    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="apple-touch-icon" href="/xueyu.png" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
     />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+      .video-grid {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 160px);
+        grid-auto-rows: 120px;
+        gap: 8px;
+        max-width: 400px;
+        z-index: 1000;
+      }
+      
+      .video-grid video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #2c2c2c;
+        background: #222639;
+      }
+    </style>
+
     <!-- 
       Hacky fix for peerjs' issue with Vite.
       See: https://github.com/peers/peerjs/issues/753
@@ -25,9 +50,9 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <div class="video-grid"></div>
-    <div class="button-grid"></div>
-    <div id="phaser-container"></div>
+    <div id="phaser-container">
+      <div class="video-grid"></div>
+    </div>
     <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

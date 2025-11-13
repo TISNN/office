@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
-
 import phaserGame from '../PhaserGame'
 import Game from '../scenes/Game'
 
@@ -34,9 +33,9 @@ export default function VideoConnectionDialog() {
               setConnectionWarning(!connectionWarning)
             }}
           >
-            <AlertTitle>Warning</AlertTitle>
-            No webcam connected
-            <br /> <strong>connect one for full experience!</strong>
+            <AlertTitle>警告</AlertTitle>
+            未连接摄像头
+            <br /> <strong>连接摄像头以获得完整体验！</strong>
           </Alert>
         )}
         <Button
@@ -47,7 +46,7 @@ export default function VideoConnectionDialog() {
             game.network.webRTC?.getUserMedia()
           }}
         >
-          Connect Webcam
+          连接摄像头
         </Button>
       </Wrapper>
     </Backdrop>

@@ -104,4 +104,4 @@ Big thanks to open-source whiteboard project - [WBO](https://github.com/lovasoa/
 
 This project is licensed under MIT.
 
-If you're using SkyOffice to power your virtual office or using our code in other projects, please consider [buy me a coffee](https://www.buymeacoffee.com/skyoffice). Thank you :)
+If you're using SkyOffice to power your virtual office or using our code in other projects, please consider [buy me a coffee](https://www..com/skyoffice). Thank you :)

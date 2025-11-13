@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 
 // import { debugDraw } from '../utils/debug'
 import { createCharacterAnims } from '../anims/CharacterAnims'
+import { phaserEvents, Event } from '../events/EventCenter'
 
 import Item from '../items/Item'
 import Chair from '../items/Chair'
@@ -21,6 +22,7 @@ import { ItemType } from '../../../types/Items'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import { NavKeys, Keyboard } from '../../../types/KeyboardState'
+import logo from '../images/xueyu-bg.png'
 
 export default class Game extends Phaser.Scene {
   network!: Network
@@ -34,6 +36,11 @@ export default class Game extends Phaser.Scene {
   private otherPlayerMap = new Map<string, OtherPlayer>()
   computerMap = new Map<string, Computer>()
   private whiteboardMap = new Map<string, Whiteboard>()
+  
+  // 修改缩放限制
+  private minZoom = 0.1  // 降低最小缩放限制
+  private maxZoom = 2
+  private zoomSpeed = 0.2  // 增加缩放速度
 
   constructor() {
     super('game')
@@ -66,6 +73,11 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.enabled = true
   }
 
+  preload() {
+    // 加载logo图片
+    this.load.image('floor-logo', logo)
+  }
+
   create(data: { network: Network }) {
     if (!data.network) {
       throw new Error('server instance missing')
@@ -80,6 +92,12 @@ export default class Game extends Phaser.Scene {
 
     const groundLayer = this.map.createLayer('Ground', FloorAndGround)
     groundLayer.setCollisionByProperty({ collides: true })
+
+    // 添加logo到地图上
+    const logo = this.add.image(705, 500, 'floor-logo')
+    logo.setDepth(0.5) // 设置深度在地面层和玩家之间
+    logo.setAlpha(0.3) // 设置更透明的效果
+    logo.setScale(0.15) // 调整大小
 
     // debugDraw(groundLayer, this)
 
@@ -138,8 +156,15 @@ export default class Game extends Phaser.Scene {
 
     this.otherPlayers = this.physics.add.group({ classType: OtherPlayer })
 
-    this.cameras.main.zoom = 1.5
+    this.cameras.main.zoom = 1.0  // 修改初始缩放值
     this.cameras.main.startFollow(this.myPlayer, true)
+
+    // 添加鼠标滚轮缩放事件，优化缩放体验
+    this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+      const cam = this.cameras.main
+      const newZoom = cam.zoom - (deltaY * this.zoomSpeed * 0.01)
+      cam.zoom = Phaser.Math.Clamp(newZoom, this.minZoom, this.maxZoom)
+    })
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer)
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines)
@@ -169,6 +194,9 @@ export default class Game extends Phaser.Scene {
     this.network.onItemUserAdded(this.handleItemUserAdded, this)
     this.network.onItemUserRemoved(this.handleItemUserRemoved, this)
     this.network.onChatMessageAdded(this.handleChatMessageAdded, this)
+
+    // Listen for status change events
+    phaserEvents.on(Event.MY_PLAYER_STATUS_CHANGE, this.handleMyPlayerStatusChange, this)
   }
 
   private handleItemSelectorOverlap(playerSelector, selectionItem) {
@@ -279,6 +307,15 @@ export default class Game extends Phaser.Scene {
   private handleChatMessageAdded(playerId: string, content: string) {
     const otherPlayer = this.otherPlayerMap.get(playerId)
     otherPlayer?.updateDialogBubble(content)
+  }
+
+  private handleMyPlayerStatusChange = (status: 'online' | 'busy') => {
+    // 直接更新本地玩家状态
+    if (this.myPlayer) {
+      this.myPlayer.updateStatus(status)
+    }
+    // 通过网络广播状态更新
+    this.network.updatePlayerStatus(status)
   }
 
   update(t: number, dt: number) {
